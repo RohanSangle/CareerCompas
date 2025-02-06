@@ -8,35 +8,83 @@ import { redirect } from "next/navigation";
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
+  const username = formData.get("username")?.toString();
+  const instituteName = formData.get("institute_name")?.toString();
+  const location = formData.get("location")?.toString();
+
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
 
-  if (!email || !password) {
+  if (!email || !password || !username || !instituteName || !location) {
     return encodedRedirect(
       "error",
       "/sign-up",
-      "Email and password are required",
+      "All fields are required",
     );
   }
 
-  const { error } = await supabase.auth.signUp({
+  // const { error } = await supabase.auth.signUp({
+  //   email,
+  //   password,
+  //   options: {
+  //     emailRedirectTo: `${origin}/auth/callback`,
+  //   },
+  // });
+
+  // if (error) {
+  //   console.error(error.code + " " + error.message);
+  //   return encodedRedirect("error", "/sign-up", error.message);
+  // } else {
+  //   return encodedRedirect(
+  //     "success",
+  //     "/sign-up",
+  //     "Thanks for signing up! Please check your email for a verification link.",
+  //   );
+  // }
+
+  const { data: { user }, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
+      data: {
+        username,
+      }
     },
   });
 
-  if (error) {
-    console.error(error.code + " " + error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
-  } else {
-    return encodedRedirect(
-      "success",
-      "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link.",
-    );
+  if (signUpError) {
+    console.error(signUpError.code + " " + signUpError.message);
+    return encodedRedirect("error", "/sign-up", signUpError.message);
   }
+
+  if (user) {
+    // Create profile record
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .insert({
+        id: user.id,
+        username,
+        email,
+        institute_name: instituteName,
+        location
+      });
+
+    if (profileError) {
+      console.error(profileError);
+      return encodedRedirect(
+        "error",
+        "/sign-up",
+        "Failed to create profile"
+      );
+    }
+  }
+
+  return encodedRedirect(
+    "success",
+    "/sign-up",
+    "Thanks for signing up! Please check your email for a verification link.",
+  );
 };
 
 export const signInAction = async (formData: FormData) => {
