@@ -4,7 +4,6 @@ import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { SmtpMessage } from "../smtp-message";
 
 export default async function Signup(props: {
   searchParams: Promise<Message>;
@@ -38,13 +37,11 @@ export default async function Signup(props: {
             type="password"
             name="password"
             placeholder="Your password"
-            // minLength={6}
             required
           />
           <Label htmlFor="institute_name">Current Institute name</Label>
           <Input name="institute_name" placeholder="xyz college of Engineering" required />
           <Label htmlFor="location">Location</Label>
-          {/* dropdown */}
           <Input name="location" placeholder="Pune" required />
           <SubmitButton formAction={signUpAction} pendingText="Signing up...">
             Sign up
@@ -52,7 +49,6 @@ export default async function Signup(props: {
           <FormMessage message={searchParams} />
         </div>
       </form>
-      <SmtpMessage />
     </>
   );
 }
