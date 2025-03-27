@@ -38,7 +38,9 @@ export async function staticRecommendation(userId: string) {
   // 2. Fetch all career ideal scores from careeridealscores
   const { data: careerIdealScores, error: careerError } = await supabase
     .from("careeridealscores")
-    .select("career_id, question_ids, ideal_scores");
+    .select("career_id, question_ids, ideal_scores")
+    .gte("career_id", 22) // Greater than or equal to 22
+    .lte("career_id", 63); // Less than or equal to 63
 
   if (careerError || !careerIdealScores) {
     console.error("Error fetching career ideal scores:", careerError?.message);
@@ -64,6 +66,11 @@ export async function staticRecommendation(userId: string) {
     .filter((item) => item.distance <= averageDistance)
     .map((item) => item.career_id);
 
+  console.log("Career Ideal Scores:", careerIdealScores);
+  console.log("User Scores:", userScores);
+  console.log("Distances:", distances);
+  console.log("Average Distance:", averageDistance);
+  console.log("Shortlisted Career IDs:", shortlistedCareerIds);
   // 6. Store the shortlisted careers in careerrecommendation
   const { error: insertError } = await supabase.from("careerrecommendation").insert({
     user_id: userId,
@@ -75,7 +82,10 @@ export async function staticRecommendation(userId: string) {
     console.error("Error storing recommendations:", insertError.message);
     throw new Error("Could not store career recommendations");
   }
+  else{
+    redirect("/main");
+  }
 
   // 7. Redirect to the main page
-  redirect("/main");
+  // redirect("/main");
 }

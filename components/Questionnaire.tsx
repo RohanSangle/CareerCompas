@@ -108,7 +108,7 @@ const Questionnaire = ({ questions, userId }: QuestionnaireProps) => {
         // alert("Responses submitted and recommendations calculated!");
       } catch (error) {
         console.error("Error calculating recommendations:", error);
-        alert("Failed to calculate recommendations. Please try again.");
+        // alert("Failed to calculate recommendations. Please try again.");
       }
     });
     // const { data, error } = await supabase.from("staticresponses").insert({
