@@ -16,7 +16,7 @@ export default async function StaticTestPage() {
   const { data: questions, error } = await supabase
     .from("questions")
     .select("*")
-    .eq('category', '12th')
+    .eq('category', '10th')
     .order("question_id");
 
   if (error) {

@@ -39,8 +39,8 @@ export async function staticRecommendation(userId: string) {
   const { data: careerIdealScores, error: careerError } = await supabase
     .from("careeridealscores")
     .select("career_id, question_ids, ideal_scores")
-    .gte("career_id", 22) // Greater than or equal to 22
-    .lte("career_id", 63); // Less than or equal to 63
+    .gte("career_id", 1) // Greater than or equal to 22
+    .lte("career_id", 21); // Less than or equal to 63
 
   if (careerError || !careerIdealScores) {
     console.error("Error fetching career ideal scores:", careerError?.message);
