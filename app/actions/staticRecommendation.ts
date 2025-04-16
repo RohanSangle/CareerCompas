@@ -15,8 +15,10 @@ function calculateEuclideanDistance(userScores: number[], idealScores: number[])
 }
 
 // Main handler for questionnaire submission
-export async function staticRecommendation(userId: string) {
+export async function staticRecommendation(userId: string, SelectedCategory: number) {
   const supabase = await createClient();
+
+  const careerRange = SelectedCategory === 10 ? { gte: 1, lte: 21 } : { gte: 22, lte: 63 };
 
   // 1. Fetch the latest user response from staticresponses
   const { data: userResponse, error: responseError } = await supabase
@@ -39,8 +41,8 @@ export async function staticRecommendation(userId: string) {
   const { data: careerIdealScores, error: careerError } = await supabase
     .from("careeridealscores")
     .select("career_id, question_ids, ideal_scores")
-    .gte("career_id", 1) // Greater than or equal to 22
-    .lte("career_id", 21); // Less than or equal to 63
+    .gte("career_id", careerRange.gte) // Greater than or equal to 22
+    .lte("career_id", careerRange.lte); // Less than or equal to 63
 
   if (careerError || !careerIdealScores) {
     console.error("Error fetching career ideal scores:", careerError?.message);

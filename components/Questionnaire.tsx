@@ -16,10 +16,11 @@ interface Question {
 interface QuestionnaireProps {
     questions: Question[];
     userId: string;
+    selectedCategory: number; // Add selectedCategory (10 or 12)
 }
 
 
-const Questionnaire = ({ questions, userId }: QuestionnaireProps) => {
+const Questionnaire = ({ questions, userId, selectedCategory }: QuestionnaireProps) => {
   // State for current page and selected options
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(
@@ -103,7 +104,7 @@ const Questionnaire = ({ questions, userId }: QuestionnaireProps) => {
 
       // 2. Calculate recommendations and redirect
       try {
-        await staticRecommendation(userId);
+        await staticRecommendation(userId, selectedCategory);
         // Note: redirect happens server-side, so this alert won't show unless there's an error
         // alert("Responses submitted and recommendations calculated!");
       } catch (error) {
