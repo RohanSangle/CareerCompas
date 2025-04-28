@@ -13,6 +13,9 @@ This project helps in solving this issue by incorporating the use of Agents and 
 
 **Server:** Supabase
 
+## Run
+To run the application on localhost simply:  ``` npm run dev ```
+
 ## Supabase Tables Setup
 
 [![photo-2025-04-28-10-25-03.jpg](https://i.postimg.cc/mg4gNpDx/photo-2025-04-28-10-25-03.jpg)](https://postimg.cc/3dLh3Bm9)
